@@ -4972,14 +4972,18 @@ version = "29.0.0"
 dependencies = [
  "bitflags 2.13.0",
  "bytemuck",
+ "cfg-if",
  "exhaust",
  "hashbrown 0.17.1",
  "js-sys",
+ "lock_api",
  "log",
  "naga-types",
+ "parking_lot",
  "raw-window-handle",
  "serde",
  "serde_json",
+ "spin",
  "static_assertions",
  "web-sys",
 ]

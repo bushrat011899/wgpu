@@ -47,6 +47,7 @@ mod render;
 mod send_sync;
 mod shader;
 mod surface;
+pub mod sync;
 mod texture;
 mod tokens;
 mod transfers;

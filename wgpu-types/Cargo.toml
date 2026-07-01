@@ -38,7 +38,7 @@ alloc_instead_of_core = "warn"
 
 [features]
 default = ["std"]
-std = ["js-sys?/std", "web-sys?/std", "naga-types/std"]
+std = ["js-sys?/std", "web-sys?/std", "naga-types/std", "dep:parking_lot"]
 strict_asserts = []
 fragile-send-sync-non-atomic-wasm = []
 serde = [
@@ -55,17 +55,33 @@ trace = ["std", "serde/std"]
 web = ["dep:js-sys", "dep:web-sys"]
 exhaust = ["dep:exhaust"]
 
+# Enables the `spin` set of locking primitives.
+# This is generally only useful for `no_std` targets, and will be unused if
+# `parking_lot` is available.
+# Will fallback to a `RefCell` based implementation which is `!Sync` when no
+# alternative feature is enabled.
+spin = ["dep:spin"]
+
 [dependencies]
 naga-types = { workspace = true, features = [] }
 
 bitflags.workspace = true
 bytemuck = { workspace = true, features = ["derive"] }
+cfg-if.workspace = true
 exhaust = { workspace = true, optional = true }
+lock_api.workspace = true
 log.workspace = true
+parking_lot = { workspace = true, optional = true }
 raw-window-handle.workspace = true
 serde = { workspace = true, default-features = false, features = [
     "alloc",
     "derive",
+], optional = true }
+spin = { workspace = true, features = [
+    "rwlock",
+    "mutex",
+    "spin_mutex",
+    "lock_api",
 ], optional = true }
 static_assertions.workspace = true
 

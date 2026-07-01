@@ -154,6 +154,8 @@ libfuzzer-sys = ">0.4.0,<=0.4.7"
 libloading = "0.8"
 libm = { version = "0.2.6", default-features = false }
 libtest-mimic = "0.8"
+# Minimum version supported by parking_lot 0.12.3
+lock_api = "0.4.6"
 log = "0.4.29"
 macro_rules_attribute = "0.2"
 nanoserde = "0.2"
@@ -196,6 +198,8 @@ serde_json = "1.0.143"
 serde = { version = "1.0.225", default-features = false }
 shell-words = "1"
 smallvec = "1.14"
+# NOTE: `crossbeam-deque` currently relies on this version of spin
+spin = { version = "0.9.8", default-features = false }
 spirv = "0.4"
 static_assertions = "1.1"
 strum = { version = "0.28", default-features = false, features = ["derive"] }
