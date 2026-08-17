@@ -1,8 +1,9 @@
 use alloc::{sync::Arc, vec::Vec};
 use core::sync::atomic::Ordering;
-use wgpu_sync::RwLock;
 
 use glow::HasContext;
+use wgpu_sync::RwLock;
+use wgt::WasmNotSendSync;
 
 use crate::AtomicFenceValue;
 
@@ -20,6 +21,11 @@ struct GLFence {
     value: crate::FenceValue,
 }
 
+// FIXME: This implementation's safety is currently undocumented.
+unsafe impl Send for GLFence {}
+// FIXME: This implementation's safety is currently undocumented.
+unsafe impl Sync for GLFence {}
+
 #[derive(Debug)]
 pub struct Fence {
     last_completed: AtomicFenceValue,
@@ -29,10 +35,7 @@ pub struct Fence {
 
 impl crate::DynFence for Fence {}
 
-#[cfg(send_sync)]
-unsafe impl Send for Fence {}
-#[cfg(send_sync)]
-unsafe impl Sync for Fence {}
+static_assertions::assert_impl_all!(Fence: WasmNotSendSync);
 
 impl Fence {
     pub fn new(options: &wgt::GlBackendOptions) -> Self {
