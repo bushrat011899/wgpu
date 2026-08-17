@@ -4,6 +4,7 @@ use core::sync::atomic::Ordering;
 
 use arrayvec::ArrayVec;
 use glow::HasContext;
+use wgt::WasmNotSendSync;
 
 use super::{conv::is_layered_target, lock, Command as C, PrivateCapabilities};
 
@@ -1974,7 +1975,4 @@ impl crate::Queue for super::Queue {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for super::Queue {}
-#[cfg(send_sync)]
-unsafe impl Send for super::Queue {}
+static_assertions::assert_impl_all!(super::Queue: WasmNotSendSync);

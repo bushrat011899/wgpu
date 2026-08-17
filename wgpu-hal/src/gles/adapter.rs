@@ -3,7 +3,7 @@ use core::sync::atomic::AtomicU8;
 
 use glow::HasContext;
 use wgpu_sync::Mutex;
-use wgt::AstcChannel;
+use wgt::{AstcChannel, WasmNotSendSync};
 
 use crate::auxil::db;
 use crate::gles::ShaderClearProgram;
@@ -1437,10 +1437,7 @@ impl super::AdapterShared {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for super::Adapter {}
-#[cfg(send_sync)]
-unsafe impl Send for super::Adapter {}
+static_assertions::assert_impl_all!(super::Adapter: WasmNotSendSync);
 
 #[cfg(test)]
 mod tests {

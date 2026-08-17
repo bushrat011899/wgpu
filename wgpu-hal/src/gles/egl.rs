@@ -5,6 +5,7 @@ use std::sync::LazyLock;
 use glow::HasContext;
 use hashbrown::HashMap;
 use wgpu_sync::{MappedMutexGuard, Mutex, MutexGuard, RwLock};
+use wgt::WasmNotSendSync;
 
 /// The amount of time to wait while trying to obtain a lock to the adapter context
 const CONTEXT_LOCK_TIMEOUT_SECS: u64 = 6;
@@ -355,10 +356,7 @@ struct Inner {
     srgb_kind: SrgbFrameBufferKind,
 }
 
-#[cfg(send_sync)]
-unsafe impl Send for Inner {}
-#[cfg(send_sync)]
-unsafe impl Sync for Inner {}
+static_assertions::assert_impl_all!(Inner: WasmNotSendSync);
 
 // Different calls to `eglGetPlatformDisplay` may return the same `Display`, making it a global
 // state of all our `EglContext`s. This forces us to track the number of such context to prevent

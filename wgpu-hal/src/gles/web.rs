@@ -3,6 +3,7 @@ use alloc::{format, string::String, vec::Vec};
 use glow::HasContext;
 use wasm_bindgen::{JsCast, JsValue};
 use wgpu_sync::{Mutex, RwLock};
+use wgt::WasmNotSendSync;
 
 use super::TextureFormatDesc;
 
@@ -239,10 +240,7 @@ impl Clone for Surface {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for Surface {}
-#[cfg(send_sync)]
-unsafe impl Send for Surface {}
+static_assertions::assert_impl_all!(Surface: WasmNotSendSync);
 
 #[derive(Clone, Debug)]
 enum Canvas {

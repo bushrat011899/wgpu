@@ -12,6 +12,7 @@ use core::{cmp::max, convert::TryInto, num::NonZeroU32, ptr, sync::atomic::Order
 use arrayvec::ArrayVec;
 use glow::HasContext;
 use naga::FastHashMap;
+use wgt::WasmNotSendSync;
 
 use super::{conv, lock, MaybeMutex, PrivateCapabilities};
 use crate::auxil::map_naga_stage;
@@ -1817,7 +1818,4 @@ impl crate::Device for super::Device {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for super::Device {}
-#[cfg(send_sync)]
-unsafe impl Send for super::Device {}
+static_assertions::assert_impl_all!(super::Device: WasmNotSendSync);

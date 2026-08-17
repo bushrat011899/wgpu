@@ -115,11 +115,12 @@ use core::{
     ops::Range,
     sync::atomic::{AtomicU32, AtomicU8},
 };
-use wgpu_sync::Mutex;
 
 use arrayvec::ArrayVec;
 use glow::HasContext;
 use naga::FastHashMap;
+use wgpu_sync::Mutex;
+use wgt::WasmNotSendSync;
 
 use crate::{CopyExtent, TextureDescriptor};
 
@@ -442,10 +443,7 @@ pub enum TextureInner {
     },
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for TextureInner {}
-#[cfg(send_sync)]
-unsafe impl Send for TextureInner {}
+static_assertions::assert_impl_all!(TextureInner: WasmNotSendSync);
 
 impl TextureInner {
     fn as_native(&self) -> (glow::Texture, BindTarget) {
@@ -724,10 +722,7 @@ struct ImmediateDesc {
     size_bytes: u32,
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for ImmediateDesc {}
-#[cfg(send_sync)]
-unsafe impl Send for ImmediateDesc {}
+static_assertions::assert_impl_all!(ImmediateDesc: WasmNotSendSync);
 
 /// For each texture in the pipeline layout, store the index of the only
 /// sampler (in this layout) that the texture is used with.
@@ -742,10 +737,7 @@ struct PipelineInner {
     clip_distance_count: u32,
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for PipelineInner {}
-#[cfg(send_sync)]
-unsafe impl Send for PipelineInner {}
+static_assertions::assert_impl_all!(PipelineInner: WasmNotSendSync);
 
 #[derive(Clone, Debug)]
 struct DepthState {
@@ -1111,10 +1103,7 @@ impl fmt::Debug for CommandBuffer {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for CommandBuffer {}
-#[cfg(send_sync)]
-unsafe impl Send for CommandBuffer {}
+static_assertions::assert_impl_all!(CommandBuffer: WasmNotSendSync);
 
 //TODO: we would have something like `Arc<typed_arena::Arena>`
 // here and in the command buffers. So that everything grows
@@ -1135,10 +1124,7 @@ impl fmt::Debug for CommandEncoder {
     }
 }
 
-#[cfg(send_sync)]
-unsafe impl Sync for CommandEncoder {}
-#[cfg(send_sync)]
-unsafe impl Send for CommandEncoder {}
+static_assertions::assert_impl_all!(CommandEncoder: WasmNotSendSync);
 
 #[cfg(not(webgl))]
 fn gl_debug_message_callback(source: u32, gltype: u32, id: u32, severity: u32, message: &str) {
