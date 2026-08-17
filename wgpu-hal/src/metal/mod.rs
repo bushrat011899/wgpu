@@ -57,6 +57,7 @@ use objc2_metal::{
 };
 use objc2_quartz_core::CAMetalLayer;
 use wgpu_sync::{Condvar, Mutex, RwLock};
+use wgt::WasmNotSendSync;
 
 #[derive(Clone, Debug)]
 pub struct Api;
@@ -402,8 +403,7 @@ struct AdapterShared {
     presentation_timer: time::PresentationTimer,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(AdapterShared: Send, Sync);
+static_assertions::assert_impl_all!(AdapterShared: WasmNotSendSync);
 
 impl AdapterShared {
     fn new(
@@ -460,8 +460,7 @@ pub struct Adapter {
     shared: Arc<AdapterShared>,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Adapter: Send, Sync);
+static_assertions::assert_impl_all!(Adapter: WasmNotSendSync);
 
 #[derive(Debug)]
 pub struct Queue {
@@ -469,8 +468,7 @@ pub struct Queue {
     timestamp_period: f32,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Queue: Send, Sync);
+static_assertions::assert_impl_all!(Queue: WasmNotSendSync);
 
 impl Queue {
     pub unsafe fn queue_from_raw(
@@ -915,8 +913,7 @@ pub struct Sampler {
 
 impl crate::DynSampler for Sampler {}
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Sampler: Send, Sync);
+static_assertions::assert_impl_all!(Sampler: WasmNotSendSync);
 
 impl Sampler {
     fn as_raw(&self) -> NonNull<ProtocolObject<dyn MTLSamplerState>> {
@@ -1118,8 +1115,7 @@ pub struct PassthroughShader {
     pub num_workgroups: HashMap<String, (u32, u32, u32)>,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(PassthroughShader: Send, Sync);
+static_assertions::assert_impl_all!(PassthroughShader: WasmNotSendSync);
 
 #[derive(Debug)]
 pub struct ShaderModule {
@@ -1224,8 +1220,7 @@ pub struct RenderPipeline {
     )>,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(RenderPipeline: Send, Sync);
+static_assertions::assert_impl_all!(RenderPipeline: WasmNotSendSync);
 
 impl crate::DynRenderPipeline for RenderPipeline {}
 
@@ -1235,8 +1230,7 @@ pub struct ComputePipeline {
     cs_info: PipelineStageInfo,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(ComputePipeline: Send, Sync);
+static_assertions::assert_impl_all!(ComputePipeline: WasmNotSendSync);
 
 impl crate::DynComputePipeline for ComputePipeline {}
 

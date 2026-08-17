@@ -410,8 +410,7 @@ struct BufferMapState {
     offset_of_current_mapping: wgt::BufferAddress,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Buffer: Send, Sync);
+static_assertions::assert_impl_all!(Buffer: WasmNotSendSync);
 
 impl crate::DynBuffer for Buffer {}
 
@@ -796,8 +795,7 @@ pub struct RenderPipeline {
 
 impl crate::DynRenderPipeline for RenderPipeline {}
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(RenderPipeline: Send, Sync);
+static_assertions::assert_impl_all!(RenderPipeline: WasmNotSendSync);
 
 #[derive(Debug)]
 pub struct ComputePipeline {
@@ -811,8 +809,7 @@ pub struct RayTracingPipeline {}
 
 impl crate::DynRayTracingPipeline for RayTracingPipeline {}
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(ComputePipeline: Send, Sync);
+static_assertions::assert_impl_all!(ComputePipeline: WasmNotSendSync);
 
 #[derive(Debug)]
 pub struct QuerySet {

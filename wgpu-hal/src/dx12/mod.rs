@@ -99,6 +99,7 @@ use arrayvec::ArrayVec;
 use hashbrown::HashMap;
 use suballocation::Allocator;
 use wgpu_sync::{Mutex, RwLock};
+use wgt::WasmNotSendSync;
 use windows::{
     core::{Free as _, Interface},
     Win32::{
@@ -1080,8 +1081,7 @@ pub struct Sampler {
 
 impl crate::DynSampler for Sampler {}
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Sampler: Send, Sync);
+static_assertions::assert_impl_all!(Sampler: WasmNotSendSync);
 
 #[derive(Debug)]
 pub struct QuerySet {

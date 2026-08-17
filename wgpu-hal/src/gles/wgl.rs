@@ -26,7 +26,7 @@ use glutin_wgl_sys::wgl_extra::{
 use hashbrown::HashSet;
 use raw_window_handle::{RawDisplayHandle, RawWindowHandle};
 use wgpu_sync::{Mutex, MutexGuard, RwLock};
-use wgt::InstanceFlags;
+use wgt::{InstanceFlags, WasmNotSendSync};
 use windows::{
     core::{Error, PCSTR},
     Win32::{
@@ -46,8 +46,7 @@ pub struct AdapterContext {
     inner: Arc<Mutex<Inner>>,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(AdapterContext: Send, Sync);
+static_assertions::assert_impl_all!(AdapterContext: WasmNotSendSync);
 
 impl AdapterContext {
     pub fn is_owned(&self) -> bool {
@@ -187,8 +186,7 @@ pub struct Instance {
     inner: Arc<Mutex<Inner>>,
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Instance: Send, Sync);
+static_assertions::assert_impl_all!(Instance: WasmNotSendSync);
 
 fn load_gl_func(name: &str, module: Option<Foundation::HMODULE>) -> *const c_void {
     let addr = CString::new(name.as_bytes()).unwrap();

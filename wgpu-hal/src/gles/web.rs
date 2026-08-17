@@ -108,8 +108,7 @@ impl Instance {
     }
 }
 
-#[cfg(send_sync)]
-static_assertions::assert_impl_all!(Instance: Send, Sync);
+static_assertions::assert_impl_all!(Instance: WasmNotSendSync);
 
 impl crate::Instance for Instance {
     type A = super::Api;
